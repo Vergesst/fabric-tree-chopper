@@ -18,7 +18,6 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3i
-import net.minecraft.registry.Registry
 import net.minecraft.world.World
 import java.time.Duration
 
@@ -186,7 +185,11 @@ fun maybeBreakAllLogs(
 
         // Do the damage incrementally
         if (config.fullChopDurabilityUsage == BREAK_MID_CHOP) {
-            stack.damage(1, miner) { it.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND) }
+            // stack.damage(1, miner) { entity: PlayerEntity -> entity.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND) }
+            stack.damage(1, miner, null)
+            if(stack.isEmpty) {
+                miner.sendEquipmentBreakStatus(stack.item, EquipmentSlot.MAINHAND)
+            }
             if (shouldStop(stack)) {
                 break
             }
@@ -196,7 +199,11 @@ fun maybeBreakAllLogs(
     // Do all the damage at once after the whole tree is chopped
     if (config.fullChopDurabilityUsage == BREAK_AFTER_CHOP) {
         for (i in 0 until logsBroken) {
-            stack.damage(1, miner) { it.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND) }
+            // stack.damage(1, miner) { entity: PlayerEntity -> entity.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND) }
+            stack.damage(1, miner, null)
+            if(stack.isEmpty) {
+                miner.sendEquipmentBreakStatus(stack.item, EquipmentSlot.MAINHAND)
+            }
             if (shouldStop(stack)) {
                 break
             }

@@ -11,12 +11,12 @@ plugins {
     java
     idea
     `maven-publish`
-    id("fabric-loom") version "1.0-SNAPSHOT"
+    id("fabric-loom") version "1.4.1"
     id("com.github.ben-manes.versions") version "0.42.0"
     id("com.matthewprenger.cursegradle") version "1.4.0"
     id("com.modrinth.minotaur") version "2.+"
     id("com.diffplug.spotless") version "6.11.0"
-    kotlin("jvm") version "1.7.20"
+    kotlin("jvm") version "2.0.0"
     id("org.shipkit.shipkit-auto-version") version "1.+"
     id("org.shipkit.shipkit-changelog") version "1.+"
     id("org.shipkit.shipkit-github-release") version "1.+"
@@ -47,11 +47,12 @@ repositories {
         url = uri("https://maven.skaggsm.com/releases")
         name = "Personal"
     }
+    maven("https://api.modrinth.com/maven") // Modrinth Maven repository
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 val curseforge_id: String by project
@@ -98,6 +99,9 @@ dependencies {
 
     modImplementation("me.zeroeightsix:fiber:$fiber_version")
     include("me.zeroeightsix:fiber:$fiber_version")
+
+    // using official mapping
+    // mappings(loom.officialMojangMappings())
 }
 
 tasks.processResources {
@@ -119,12 +123,14 @@ tasks.withType<JavaCompile> {
     // If Javadoc is generated, this must be specified in that task too.
     options.encoding = "UTF-8"
 
-    options.release.set(17)
+    // err fixed -> jvm17 => jvm21
+    options.release.set(21)
 }
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "17"
+        // 17 -> 21 minecraft 1.20.1 -> 1.21.1
+        jvmTarget = "21"
     }
 }
 
@@ -243,9 +249,11 @@ spotless {
 afterEvaluate {
     // CurseGradle generates tasks in afterEvaluate for each project
     // There isn't really any other way to make it depend on a task unless it is an AbstractArchiveTask
-    val curseforgeTask = tasks.getByName("curseforge$curseforge_id")
-    val modrinthTask = tasks.modrinth
-    tasks.publish {
-        dependsOn(curseforgeTask, modrinthTask)
-    }
+
+
+    // val curseforgeTask = tasks.getByName("curseforge$curseforge_id")
+    // val modrinthTask = tasks.modrinth
+    // tasks.publish {
+    //     dependsOn(curseforgeTask, modrinthTask)
+    // }
 }

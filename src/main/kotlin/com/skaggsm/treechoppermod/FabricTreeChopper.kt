@@ -26,7 +26,8 @@ object FabricTreeChopper : ModInitializer {
     const val MODID = "fabric-tree-chopper"
     private val IDENTIFIER_TYPE: StringConfigType<Identifier> = ConfigTypes.STRING
         .withPattern("(?>[a-z0-9_.-]+:)?[a-z0-9/._-]+")
-        .derive(Identifier::class.java, ::Identifier, Identifier::toString)
+        // api changed constructor => Identifier.of(String)
+        .derive(Identifier::class.java, { Identifier.of(it) }, Identifier::toString)
 
     private val serializer = JanksonValueSerializer(false)
     private val configFile: Path = FabricLoader.getInstance().configDir / "fabric-tree-chopper.json"
