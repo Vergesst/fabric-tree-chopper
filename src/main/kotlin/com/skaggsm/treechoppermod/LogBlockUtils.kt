@@ -1,9 +1,11 @@
 package com.skaggsm.treechoppermod
 
 import com.google.common.cache.CacheBuilder
-import com.skaggsm.treechoppermod.FabricTreeChopper.config
-import com.skaggsm.treechoppermod.FullChopDurabilityMode.BREAK_AFTER_CHOP
-import com.skaggsm.treechoppermod.FullChopDurabilityMode.BREAK_MID_CHOP
+import com.skaggsm.treechoppermod.FabricTreeChopper.Companion.axes
+import com.skaggsm.treechoppermod.core.ChopMode
+import com.skaggsm.treechoppermod.core.ChopperConfig
+import com.skaggsm.treechoppermod.core.DurabilityMode
+import com.skaggsm.treechoppermod.handler.ConfigRegistry
 import net.minecraft.SharedConstants
 import net.minecraft.block.BlockState
 import net.minecraft.block.LeavesBlock
@@ -20,6 +22,8 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3i
 import net.minecraft.world.World
 import java.time.Duration
+
+val config: ChopperConfig = ConfigRegistry.COMMON.get()
 
 private val BlockState.isNaturalLeaf: Boolean
     get() = (this.isIn(BlockTags.LEAVES) || this.isIn(BlockTags.WART_BLOCKS)) &&
@@ -131,7 +135,7 @@ fun findAllLogsAbove(originalBlockState: BlockState, world: World, originalBlock
     // The original block was already broken, skip returning it
     foundLogs -= originalBlockPos
 
-    return if (config.requireLeavesToChop && !foundNaturalLeaf) {
+    return if (config.leafConfig.requireLeafToChop && !foundNaturalLeaf) {
         emptySet()
     } else {
         foundLogs
@@ -184,11 +188,10 @@ fun maybeBreakAllLogs(
         miner.addExhaustion(0.005f)
 
         // Do the damage incrementally
-        if (config.fullChopDurabilityUsage == BREAK_MID_CHOP) {
-            // stack.damage(1, miner) { entity: PlayerEntity -> entity.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND) }
+        if (config.durabilityMode == DurabilityMode.BREAK_MID_CHOP) {
             stack.damage(1, miner, null)
             if(stack.isEmpty) {
-                miner.sendEquipmentBreakStatus(stack.item, EquipmentSlot.MAINHAND)
+                miner.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND)
             }
             if (shouldStop(stack)) {
                 break
@@ -197,12 +200,11 @@ fun maybeBreakAllLogs(
     }
 
     // Do all the damage at once after the whole tree is chopped
-    if (config.fullChopDurabilityUsage == BREAK_AFTER_CHOP) {
+    if (config.durabilityMode == DurabilityMode.BREAK_AFTER_CHOP) {
         for (i in 0 until logsBroken) {
-            // stack.damage(1, miner) { entity: PlayerEntity -> entity.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND) }
             stack.damage(1, miner, null)
             if(stack.isEmpty) {
-                miner.sendEquipmentBreakStatus(stack.item, EquipmentSlot.MAINHAND)
+                miner.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND)
             }
             if (shouldStop(stack)) {
                 break
@@ -223,16 +225,15 @@ fun canBreakLog(player: PlayerEntity, state: BlockState): Boolean {
     return state.isChoppable &&
         config.sneakBehavior.shouldChop(player.isSneaking) &&
         !(player.isCreative && !config.chopInCreativeMode) &&
-        player.mainHandStack.item.id in config.axes
+        player.mainHandStack.item.id in axes
 }
 
 fun tryLogBreak(world: World, player: PlayerEntity, pos: BlockPos, state: BlockState) {
     if (canBreakLog(player, state)) {
-        when (config.treeChopMode) {
+        when (config.chopMode) {
             ChopMode.FULL_CHOP -> maybeBreakAllLogs(state, world, pos, player)
             ChopMode.SINGLE_CHOP -> maybeSwapFurthestLog(state, world, pos)
-            ChopMode.VANILLA_CHOP -> {
-            }
+            ChopMode.VANILLA_CHOP -> {}
         }
     }
 }

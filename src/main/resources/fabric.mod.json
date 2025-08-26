@@ -23,7 +23,7 @@
       }
     ],
     "modmenu": [
-      "com.skaggsm.treechoppermod.FabricTreeChopperConfigScreen"
+      "com.skaggsm.treechoppermod.ModMenuIntegration"
     ]
   },
   "mixins": [

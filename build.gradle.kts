@@ -5,7 +5,31 @@ import com.matthewprenger.cursegradle.CurseArtifact
 import com.matthewprenger.cursegradle.CurseProject
 import com.matthewprenger.cursegradle.CurseRelation
 import com.matthewprenger.cursegradle.Options
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+// top level declaration
+val curseforge_id: String by project
+val modrinth_id: String by project
+val archives_base_name: String by project
+val maven_group: String by project
+val minecraft_version: String by project
+val yarn_mappings: String by project
+val loader_version: String by project
+val fabric_version: String by project
+val kotlin_version: String by project
+val cloth_config_version: String by project
+val modmenu_version: String by project
+val java_version: String by project
+
+// extension function
+fun DependencyHandler.compileAndRuntimeOnly(
+    dependencyPath: String,
+    config: (ExternalModuleDependency.() -> Unit) = {}
+) {
+    add("modCompileOnly", dependencyPath, config)
+    add("modRuntimeOnly", dependencyPath, config)
+}
 
 plugins {
     java
@@ -51,23 +75,10 @@ repositories {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    // current minecraft-1.20.2
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
-
-val curseforge_id: String by project
-val modrinth_id: String by project
-val archives_base_name: String by project
-val maven_group: String by project
-val minecraft_version: String by project
-val yarn_mappings: String by project
-val loader_version: String by project
-val fabric_version: String by project
-val kotlin_version: String by project
-val cloth_config_version: String by project
-val fiber_2_cloth_version: String by project
-val fiber_version: String by project
-val modmenu_version: String by project
 
 base {
     archivesName.set(archives_base_name)
@@ -91,17 +102,9 @@ dependencies {
 
     modImplementation("com.terraformersmc:modmenu:$modmenu_version")
 
-    modImplementation("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version")
-    include("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version")
-
-    modImplementation("me.shedaniel.cloth:fiber2cloth:$fiber_2_cloth_version")
-    include("me.shedaniel.cloth:fiber2cloth:$fiber_2_cloth_version")
-
-    modImplementation("me.zeroeightsix:fiber:$fiber_version")
-    include("me.zeroeightsix:fiber:$fiber_version")
-
-    // using official mapping
-    // mappings(loom.officialMojangMappings())
+    compileAndRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${project.property("cloth_version")}") {
+        exclude(group = "net.fabricmc.fabric-api")
+    }
 }
 
 tasks.processResources {
@@ -124,13 +127,14 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 
     // err fixed -> jvm17 => jvm21
-    options.release.set(21)
+    options.release.set(java_version.toInt())
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
+    compilerOptions {
         // 17 -> 21 minecraft 1.20.1 -> 1.21.1
-        jvmTarget = "21"
+        // stage 1 --- 1.20.1 -> 1.20.2
+        jvmTarget.set(JvmTarget.fromTarget(java_version))
     }
 }
 
@@ -249,7 +253,6 @@ spotless {
 afterEvaluate {
     // CurseGradle generates tasks in afterEvaluate for each project
     // There isn't really any other way to make it depend on a task unless it is an AbstractArchiveTask
-
 
     // val curseforgeTask = tasks.getByName("curseforge$curseforge_id")
     // val modrinthTask = tasks.modrinth
