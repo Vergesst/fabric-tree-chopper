@@ -5,6 +5,7 @@ import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.minecraft.item.AxeItem
 import net.minecraft.registry.Registries
+import net.minecraft.util.Identifier
 
 /**
  * Created by Mitchell Skaggs on 7/30/2019.
@@ -13,7 +14,7 @@ class FabricTreeChopper : ModInitializer {
     companion object {
         const val MOD_ID = "fabric-tree-chopper"
 
-        val axes = Registries.ITEM.stream()
+        val axes: MutableList<Identifier> = Registries.ITEM.stream()
             .filter(AxeItem::class.java::isInstance)
             .map(Registries.ITEM::getId)
             .toList()

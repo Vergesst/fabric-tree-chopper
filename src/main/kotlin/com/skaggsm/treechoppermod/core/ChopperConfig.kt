@@ -4,6 +4,7 @@ import com.skaggsm.treechoppermod.FabricTreeChopper
 import me.shedaniel.autoconfig.ConfigData
 import me.shedaniel.autoconfig.annotation.Config
 import me.shedaniel.autoconfig.annotation.ConfigEntry
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler.EnumDisplayOption.*
 
 @Config(name = FabricTreeChopper.MOD_ID)
 class ChopperConfig: ConfigData {
@@ -14,22 +15,23 @@ class ChopperConfig: ConfigData {
 
     var stopBeforeAxeBreak = true
     var chopInCreativeMode = false
+    // time spent to break a tree
     var variableBreakingTime = false
 
     // Enums
-    @ConfigEntry.Gui.EnumHandler
+    @ConfigEntry.Gui.EnumHandler(option = BUTTON)
     var chopMode = ChopMode.SINGLE_CHOP
 
-    @ConfigEntry.Gui.EnumHandler
+    @ConfigEntry.Gui.EnumHandler(option = BUTTON)
     var durabilityMode = DurabilityMode.BREAK_MID_CHOP
 
-    @ConfigEntry.Gui.EnumHandler
+    @ConfigEntry.Gui.EnumHandler(option = BUTTON)
     var sneakBehavior = SneakBehavior.DISABLED
 
     var logSearchLimit = 1000
 
     class LeafConfig: ConfigData {
         var fastLeafDecay = true
-        var requireLeafToChop = true
+        var requireLeavesToChop = true
     }
 }

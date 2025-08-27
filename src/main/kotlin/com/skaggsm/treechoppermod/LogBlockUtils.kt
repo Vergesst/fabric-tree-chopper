@@ -135,7 +135,7 @@ fun findAllLogsAbove(originalBlockState: BlockState, world: World, originalBlock
     // The original block was already broken, skip returning it
     foundLogs -= originalBlockPos
 
-    return if (config.leafConfig.requireLeafToChop && !foundNaturalLeaf) {
+    return if (config.leafConfig.requireLeavesToChop && !foundNaturalLeaf) {
         emptySet()
     } else {
         foundLogs
