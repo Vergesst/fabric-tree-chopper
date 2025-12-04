@@ -12,7 +12,7 @@
   "text.autoconfig.fabric-tree-chopper.option.stopBeforeAxeBreak": "Stop before axe break",
   "text.autoconfig.fabric-tree-chopper.option.variableBreakingTime": "Slow down chopping of multiple logs",
   "text.autoconfig.fabric-tree-chopper.option.chopInCreativeMode": "Chop in creative mode",
-  "text.autoconfig.fabric-tree-chopper.axes": "Axes",
+  "text.autoconfig.fabric-tree-chopper.option.axeItems": "Axes",
   "text.autoconfig.error.fabric-tree-chopper.identifierNotInRegistry": "Identifier \"%s\" not in Registry \"%s\"",
   "text.autoconfig.error.fabric-tree-chopper.identifierInvalid": "Invalid Identifier \"%s\" in list"
 }

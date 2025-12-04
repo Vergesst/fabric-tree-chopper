@@ -1,7 +1,7 @@
 package com.skaggsm.treechoppermod
 
 import com.google.common.cache.CacheBuilder
-import com.skaggsm.treechoppermod.FabricTreeChopper.Companion.axes
+// import com.skaggsm.treechoppermod.FabricTreeChopper.Companion.axes
 import com.skaggsm.treechoppermod.core.ChopMode
 import com.skaggsm.treechoppermod.core.ChopperConfig
 import com.skaggsm.treechoppermod.core.DurabilityMode
@@ -28,6 +28,7 @@ val config: ChopperConfig = ConfigRegistry.COMMON.get()
 private val BlockState.isNaturalLeaf: Boolean
     get() = (this.isIn(BlockTags.LEAVES) || this.isIn(BlockTags.WART_BLOCKS)) &&
         !this.getOrEmpty(LeavesBlock.PERSISTENT).orElse(false)
+
 private val BlockState.isChoppable: Boolean
     get() = this.isIn(BlockTags.LOGS)
 
@@ -225,7 +226,7 @@ fun canBreakLog(player: PlayerEntity, state: BlockState): Boolean {
     return state.isChoppable &&
         config.sneakBehavior.shouldChop(player.isSneaking) &&
         !(player.isCreative && !config.chopInCreativeMode) &&
-        player.mainHandStack.item.id in axes
+        player.mainHandStack.item.id in config.axeItems
 }
 
 fun tryLogBreak(world: World, player: PlayerEntity, pos: BlockPos, state: BlockState) {

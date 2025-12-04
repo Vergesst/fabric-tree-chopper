@@ -18,18 +18,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static org.spongepowered.asm.mixin.injection.callback.LocalCapture.CAPTURE_FAILSOFT;
 
 @Pseudo
-//@Mixin(targets = {LeavesBlock.class, "com.epherical.croptopia.blocks.LeafCropBlock"})
+// @Mixin(targets = {LeavesBlock.class, "com.epherical.croptopia.blocks.LeafCropBlock"})
 // croptopis --- external mods
 @Mixin(value = {LeavesBlock.class})
 public abstract class LeavesBlockMixin extends Block {
-    @Shadow
-    public abstract void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random);
-
     public LeavesBlockMixin(Settings settings) {
         super(settings);
     }
 
-    @Inject(at = @At("TAIL"), method = {"scheduledTick"}, locals = CAPTURE_FAILSOFT, remap = false)
+    @Inject(at = @At("TAIL"), method = {"scheduledTick"}, remap = false)
     private void onScheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         var newState = world.getBlockState(pos);
 

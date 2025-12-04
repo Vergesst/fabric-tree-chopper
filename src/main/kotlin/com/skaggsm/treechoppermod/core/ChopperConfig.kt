@@ -5,6 +5,7 @@ import me.shedaniel.autoconfig.ConfigData
 import me.shedaniel.autoconfig.annotation.Config
 import me.shedaniel.autoconfig.annotation.ConfigEntry
 import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler.EnumDisplayOption.*
+import net.minecraft.item.AxeItem
 
 @Config(name = FabricTreeChopper.MOD_ID)
 class ChopperConfig: ConfigData {
@@ -29,6 +30,9 @@ class ChopperConfig: ConfigData {
     var sneakBehavior = SneakBehavior.DISABLED
 
     var logSearchLimit = 1000
+
+    @ConfigEntry.Gui.CollapsibleObject
+    var axeItems = FabricTreeChopper.axes.map { it }
 
     class LeafConfig: ConfigData {
         var fastLeafDecay = true
