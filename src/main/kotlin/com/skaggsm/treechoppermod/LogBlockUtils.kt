@@ -223,10 +223,13 @@ fun maybeBreakAllLogs(
 }
 
 fun canBreakLog(player: PlayerEntity, state: BlockState): Boolean {
+    val axeIdList = config.axeItems.map {
+        Identifier.of(it.split(":")[0], it.split(":")[1])
+    }
     return state.isChoppable &&
         config.sneakBehavior.shouldChop(player.isSneaking) &&
         !(player.isCreative && !config.chopInCreativeMode) &&
-        player.mainHandStack.item.id in config.axeItems
+        player.mainHandStack.item.id in axeIdList
 }
 
 fun tryLogBreak(world: World, player: PlayerEntity, pos: BlockPos, state: BlockState) {

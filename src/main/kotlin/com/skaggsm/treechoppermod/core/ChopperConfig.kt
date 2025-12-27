@@ -5,7 +5,7 @@ import me.shedaniel.autoconfig.ConfigData
 import me.shedaniel.autoconfig.annotation.Config
 import me.shedaniel.autoconfig.annotation.ConfigEntry
 import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler.EnumDisplayOption.*
-import net.minecraft.item.AxeItem
+import net.minecraft.util.Identifier
 
 @Config(name = FabricTreeChopper.MOD_ID)
 class ChopperConfig: ConfigData {
@@ -31,9 +31,23 @@ class ChopperConfig: ConfigData {
 
     var logSearchLimit = 1000
 
-    @ConfigEntry.Gui.CollapsibleObject
-    var axeItems = FabricTreeChopper.axes.map { it }
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    var axeItems: MutableList<String> = mutableListOf (
+        "minecraft:wooden_axe",
+        "minecraft:stone_axe",
+        "minecraft:iron_axe",
+        "minecraft:golden_axe",
+        "minecraft:diamond_axe",
+        "minecraft:netherite_axe"
+    )
 
+    // @ConfigEntry.Gui.CollapsibleObject
+    // var axeItems = FabricTreeChopper.axes.map { it }
+    // var axeItems = axes.map {
+    //     Identifier.of(it.split(":")[0], it.split(":")[1])
+    // }
+
+    // Leaf config
     class LeafConfig: ConfigData {
         var fastLeafDecay = true
         var requireLeavesToChop = true

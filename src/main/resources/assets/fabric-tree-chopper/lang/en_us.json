@@ -14,5 +14,7 @@
   "text.autoconfig.fabric-tree-chopper.option.chopInCreativeMode": "Chop in creative mode",
   "text.autoconfig.fabric-tree-chopper.option.axeItems": "Axes",
   "text.autoconfig.error.fabric-tree-chopper.identifierNotInRegistry": "Identifier \"%s\" not in Registry \"%s\"",
-  "text.autoconfig.error.fabric-tree-chopper.identifierInvalid": "Invalid Identifier \"%s\" in list"
+  "text.autoconfig.error.fabric-tree-chopper.identifierInvalid": "Invalid Identifier \"%s\" in list",
+  "text.autoconfig.fabric-tree-chopper.option.axeItems.@Tooltip[0]": "Input Valid Identifier for Items, ",
+  "text.autoconfig.fabric-tree-chopper.option.axeItems.@Tooltip[1]": "Just Like: 'minecraft:diamond_axe' with Identifier and Path of it."
 }

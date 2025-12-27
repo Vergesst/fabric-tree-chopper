@@ -1,10 +1,12 @@
 package com.skaggsm.treechoppermod
 
 import com.skaggsm.treechoppermod.handler.ConfigRegistry
+import com.skaggsm.treechoppermod.handler.ConfigRegistry.COMMON
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.minecraft.item.AxeItem
 import net.minecraft.registry.Registries
+import net.minecraft.util.ActionResult
 import net.minecraft.util.Identifier
 
 /**
@@ -13,15 +15,14 @@ import net.minecraft.util.Identifier
 class FabricTreeChopper : ModInitializer {
     companion object {
         const val MOD_ID = "fabric-tree-chopper"
-
-        val axes: MutableList<Identifier> = Registries.ITEM.stream()
-            .filter(AxeItem::class.java::isInstance)
-            .map(Registries.ITEM::getId)
-            .toList()
     }
 
     override fun onInitialize() {
         ConfigRegistry.registerConfig()
+
+        COMMON.registerSaveListener { manager, data ->
+            return@registerSaveListener ActionResult.SUCCESS
+        }
 
         PlayerBlockBreakEvents.AFTER.register(
             PlayerBlockBreakEvents.After { world, player, pos, state, _ ->
