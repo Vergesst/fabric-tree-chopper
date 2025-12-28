@@ -41,12 +41,6 @@ class ChopperConfig: ConfigData {
         "minecraft:netherite_axe"
     )
 
-    // @ConfigEntry.Gui.CollapsibleObject
-    // var axeItems = FabricTreeChopper.axes.map { it }
-    // var axeItems = axes.map {
-    //     Identifier.of(it.split(":")[0], it.split(":")[1])
-    // }
-
     // Leaf config
     class LeafConfig: ConfigData {
         var fastLeafDecay = true

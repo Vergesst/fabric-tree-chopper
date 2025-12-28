@@ -1,7 +1,6 @@
 package com.skaggsm.treechoppermod
 
 import com.google.common.cache.CacheBuilder
-// import com.skaggsm.treechoppermod.FabricTreeChopper.Companion.axes
 import com.skaggsm.treechoppermod.core.ChopMode
 import com.skaggsm.treechoppermod.core.ChopperConfig
 import com.skaggsm.treechoppermod.core.DurabilityMode
@@ -222,14 +221,14 @@ fun maybeBreakAllLogs(
     )
 }
 
+/**
+ * determines whether current weapon or tool should be regarded as TreeChopper
+ */
 fun canBreakLog(player: PlayerEntity, state: BlockState): Boolean {
-    val axeIdList = config.axeItems.map {
-        Identifier.of(it.split(":")[0], it.split(":")[1])
-    }
     return state.isChoppable &&
         config.sneakBehavior.shouldChop(player.isSneaking) &&
         !(player.isCreative && !config.chopInCreativeMode) &&
-        player.mainHandStack.item.id in axeIdList
+        player.mainHandStack.item.id.toString() in config.axeItems
 }
 
 fun tryLogBreak(world: World, player: PlayerEntity, pos: BlockPos, state: BlockState) {
